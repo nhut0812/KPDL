@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán loài hoa</title>
+    <style>
+        /* Tổng thể */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(120deg, #ffafbd, #ffc3a0, #c9ffbf);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #4a4a4a;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            font-size: 16px;
+            padding: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 1);
+            border-color: #6a11cb;
+            box-shadow: 0 0 8px rgba(106, 17, 203, 0.5);
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hiệu ứng hover cho nút */
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+            transform: skewX(-45deg);
+            transition: all 0.3s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4);
+        }
+
+        /* Hiệu ứng cho hình ảnh */
+        img {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fade-in 1s ease-out forwards;
+            transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
+        }
+
+        img:hover {
+            transform: scale(1.1); /* Phóng to ảnh */
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.3);
+            filter: brightness(1.2) saturate(1.2); /* Tăng sáng và độ bão hòa */
+        }
+
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            img {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DỰ ĐOÁN LOÀI HOA</h1>
+        <form action="/predict" method="POST">
+            <label for="sepal_length">Chiều dài đài hoa (Sepal Length):</label>
+            <input type="number" step="0.1" name="sepal_length" placeholder="Ví dụ: 5.1" required>
+            
+            <label for="sepal_width">Chiều rộng đài hoa (Sepal Width):</label>
+            <input type="number" step="0.1" name="sepal_width" placeholder="Ví dụ: 3.5" required>
+            
+            <label for="petal_length">Chiều dài cánh hoa (Petal Length):</label>
+            <input type="number" step="0.1" name="petal_length" placeholder="Ví dụ: 1.4" required>
+            
+            <label for="petal_width">Chiều rộng cánh hoa (Petal Width):</label>
+            <input type="number" step="0.1" name="petal_width" placeholder="Ví dụ: 0.2" required>
+            
+            <button type="submit">Dự đoán</button>
+        </form>
+        <h2>{{ prediction_text if prediction_text else "Vui lòng nhập thông tin để dự đoán." }}</h2>
+        <img src="{{ url_for('static', filename=image_file if image_file else 'setosa.jpg') }}" alt="Hình ảnh hoa">
+    </div>
+</body>
+</html>
